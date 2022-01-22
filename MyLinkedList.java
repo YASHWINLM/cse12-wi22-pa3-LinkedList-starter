@@ -92,46 +92,109 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public MyLinkedList() {
 		/* Add your implementation here */
 		// TODO
+		this.size=0;
+		this.head=new Node(null);
+		this.tail=new Node (null);
+		this.head.setNext(this.tail);
+		this.tail.setPrev(this.head);
 	}
 
 	@Override
 	public int size() {
 		// need to implement the size method
-		return 0; // TODO
+		return this.size; // TODO
 	}
 
 	@Override
 	public E get(int index) {
-		return (E) null;  // TODO
+		if(index<0 || index>size()){
+			throw new IndexOutOfBoundsException();
+		}
+		
+		return getNth(index).data;  // TODO
 	}
 
 	@Override
 	public void add(int index, E data) {
 		/* Add your implementation here */
 		// TODO
+
+		Node newNode = new Node(data);
+		if (data == null)
+			throw new NullPointerException();
+		else if (size == 0 || index == size) {
+
+			newNode.next = tail;
+			newNode.prev = tail.prev;
+			newNode.prev.next = newNode;
+			tail.prev = newNode;
+
+		} else {
+			Node curNode = getNth(index - 1);
+			newNode.prev = curNode.prev;
+			newNode.next = curNode;
+			curNode.prev = newNode;
+		}
+
+		size++;
 	}
 
 	public boolean add(E data) {
-		return true; // TODO
+		add(size, data);
+		return true;
 	}
 
 	public E set(int index, E data) {
-		return (E) null; // TODO
+		if(data==null){
+			throw new NullPointerException();
+		}
+		if(index < 0 || index >=size()){
+			throw new IndexOutOfBoundsException();
+		}
+		Node replacingNode=this.head.next;
+		E replaced=null;
+		for(int i=0;i<=index;i++){
+			if(replacingNode.equals(getNth(index))){
+				replaced=replacingNode.data;
+				replacingNode.data=data;
+			}
+			replacingNode=replacingNode.next;
+		}
+		return replaced; // TODO
 	}
 
 	public E remove(int index) {
-		return (E) null; // TODO
+		Node curNode= getNth(index);
+		curNode.prev.next = curNode.next;
+		curNode.next.prev = curNode.prev;
+		return (E) curNode.data; // TODO
 	}
 
 	public void clear() {
 		/* Add your implementation here */
+		this.size=0;
+		this.head=new Node(null);
+		this.tail=new Node (null);
+		this.head.setNext(this.tail);
+		this.tail.setPrev(this.head);
 	}
 
 	public boolean isEmpty() {
-		return true;  // TODO
+		if(this.size==0){
+			return true;
+		}
+		return false;  // TODO
 	}
 
 	protected Node getNth(int index) {
-		return (Node) null;  // TODO
+		if(index < 0 || index >=size()){
+			throw new IndexOutOfBoundsException();
+		}
+		Node nTH=this.head.next;
+		for(int i=0;i<index;i++){
+			nTH=nTH.next;
+		}
+		
+		return nTH;  // TODO
 	}
 }
